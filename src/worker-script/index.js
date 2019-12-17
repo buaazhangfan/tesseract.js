@@ -108,7 +108,7 @@ const loadLanguage = async ({
         data = _lang.data; // eslint-disable-line
       }
     }
-
+    
     data = new Uint8Array(data);
 
     const type = fileType(data);
@@ -136,7 +136,8 @@ const loadLanguage = async ({
 
   res.progress({ workerId, status: 'loading language traineddata', progress: 0 });
   try {
-    await Promise.all((typeof langs === 'string' ? langs.split('+') : langs).map(loadAndGunzipFile));
+    await loadAndGunzipFile(langs);
+    // await Promise.all((typeof langs === 'string' ? langs.split('+') : langs).map(loadAndGunzipFile));
     res.progress({ workerId, status: 'loaded language traineddata', progress: 1 });
     res.resolve(langs);
   } catch (err) {
@@ -171,7 +172,7 @@ const initialize = ({
 }, res) => {
   const langs = (typeof _langs === 'string')
     ? _langs
-    : _langs.map(l => ((typeof l === 'string') ? l : l.data)).join('+');
+    : _langs.data; //_langs.map(l => ((typeof l === 'string') ? l : l.data)).join('+');
 
   try {
     res.progress({
